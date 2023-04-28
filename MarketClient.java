@@ -56,7 +56,11 @@ public class MarketClient {
                     pw.println();
                     pw.flush();
                 } else if (input.contains("|input|")) {
-                    
+                    input = input.substring(7);
+                    String out = JOptionPane.showInputDialog(null, input, "Marketplace", JOptionPane.QUESTION_MESSAGE);
+                    pw.write(out);
+                    pw.println();
+                    pw.flush();
                 } else if (input.contains("|exit|")) {
                     System.out.println("Thank you for using the Market Client!");
                     in.close();
