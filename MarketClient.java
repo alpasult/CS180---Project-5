@@ -23,7 +23,6 @@ public class MarketClient {
             JOptionPane.showMessageDialog(null, "Welcome to the Marketplace Client!", "Marketplace", JOptionPane.INFORMATION_MESSAGE);
             hostname = JOptionPane.showInputDialog(null, "Host Name: ", "Marketplace", JOptionPane.QUESTION_MESSAGE);
             port = Integer.parseInt(JOptionPane.showInputDialog(null, "Port", "Marketplace", JOptionPane.QUESTION_MESSAGE));
-
             client = new Socket(hostname, port);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Could not connect to server", "Marketplace", JOptionPane.ERROR_MESSAGE);
@@ -50,6 +49,12 @@ public class MarketClient {
                     input = input.substring(input.indexOf("|text|") + 6);
                     String[] options = input.split(",");
                     JOptionPane.showOptionDialog(null, text, "Marketplace", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                } else if (input.contains("|info|")) {
+                    input = input.substring(6);
+                    JOptionPane.showMessageDialog(null, input, "Marketplace", JOptionPane.INFORMATION_MESSAGE);
+                    pw.write("");
+                    pw.println();
+                    pw.flush();
                 } else if (input.contains("|input|")) {
                     
                 } else if (input.contains("|exit|")) {

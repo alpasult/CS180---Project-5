@@ -22,8 +22,7 @@ public class LoginThread extends Thread {
             BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
             PrintWriter pw = new PrintWriter(client.getOutputStream()); 
 
-            pw.write("|options|Welcome to the Market!\\n" +
-                     "COMMANDS:|text|" +
+            pw.write("|options|Welcome to the Market!|text|" +
                      "  login: Login to an existing account," +
                      "  register: Create a new account," +
                      "  exit: Exit the program");
