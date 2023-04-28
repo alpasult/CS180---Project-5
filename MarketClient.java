@@ -37,10 +37,9 @@ public class MarketClient {
             PrintWriter pw = new PrintWriter(client.getOutputStream()); 
 
             String input;
-            String output = "";
             while(true) {
                 input = br.readLine();
-
+                System.out.println(input);
                 input = input.replace("\\n", "\n");
                 
                 if (input.contains("|options|")) {
@@ -48,7 +47,11 @@ public class MarketClient {
                     String text = input.substring(0, input.indexOf("|text|"));
                     input = input.substring(input.indexOf("|text|") + 6);
                     String[] options = input.split(",");
-                    JOptionPane.showOptionDialog(null, text, "Marketplace", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                    int i = JOptionPane.showOptionDialog(null, text, "Marketplace", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                    System.out.println(options[i]);
+                    pw.write(options[i]);
+                    pw.println();
+                    pw.flush();
                 } else if (input.contains("|info|")) {
                     input = input.substring(6);
                     JOptionPane.showMessageDialog(null, input, "Marketplace", JOptionPane.INFORMATION_MESSAGE);
@@ -61,17 +64,24 @@ public class MarketClient {
                     pw.write(out);
                     pw.println();
                     pw.flush();
+                } else if (input.contains("|error|")) {
+                    input = input.substring(7);
+                    JOptionPane.showMessageDialog(null, input, "Marketplace", JOptionPane.ERROR_MESSAGE);
+                    in.close();
+                    client.close();
+                    return;
                 } else if (input.contains("|exit|")) {
-                    System.out.println("Thank you for using the Market Client!");
+                    input = input.substring(6);
+                    JOptionPane.showMessageDialog(null, input, "Marketplace", JOptionPane.INFORMATION_MESSAGE);
+                    in.close();
+                    client.close();
+                    return;
+                } else {
+                    JOptionPane.showMessageDialog(null, "UNKNOWN ERROR: CLOSING CONNECTION", "Marketplace", JOptionPane.ERROR_MESSAGE);
                     in.close();
                     client.close();
                     return;
                 }
-
-                output = in.nextLine();
-                pw.write(output);
-                pw.println();
-                pw.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();

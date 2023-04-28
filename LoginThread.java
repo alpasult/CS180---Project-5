@@ -23,9 +23,9 @@ public class LoginThread extends Thread {
             PrintWriter pw = new PrintWriter(client.getOutputStream()); 
 
             pw.write("|options|Welcome to the Market!|text|" +
-                     "  login: Login to an existing account," +
-                     "  register: Create a new account," +
-                     "  exit: Exit the program");
+                     "login," +
+                     "register," +
+                     "exit");
             pw.println();
             pw.flush();
             while (true) {
@@ -52,7 +52,7 @@ public class LoginThread extends Thread {
                             return;
                         }
                     } else {
-                        pw.write("Invalid login");
+                        pw.write("|error|Invalid login");
                         pw.println();
                         pw.flush();
                         client.close();
@@ -63,7 +63,7 @@ public class LoginThread extends Thread {
                     String password;
                     String userType;
 
-                    pw.write("Enter a new username:");
+                    pw.write("|input|Enter a new username:");
                     pw.println();
                     pw.flush();
                     while (true) {
@@ -72,7 +72,7 @@ public class LoginThread extends Thread {
                         for (User u : MarketServer.userList) {
                             if (u.getLogin().equals(login)) {
                                 found = true;
-                                pw.write("Username already exists!\\n" +
+                                pw.write("|input|Username already exists!\\n" +
                                          "Enter a new Username:");
                                 pw.println();
                                 pw.flush();
@@ -83,28 +83,17 @@ public class LoginThread extends Thread {
                         }
                     }
 
-                    pw.write("Enter a new password:");
+                    pw.write("|input|Enter a new password:");
                     pw.println();
                     pw.flush();
                     password = br.readLine();
 
-                    pw.write("Enter a user type:\\n" +
-                             "Options:\\n  customer\\n  seller");
+                    pw.write("|options|Enter a user type:|text|" +
+                             "customer," +
+                             "seller");
                     pw.println();
                     pw.flush();
-                    while (true) {
-                        userType = br.readLine();
-                        if (!(userType.equals("customer") ||
-                             userType.equals("seller"))) {
-                            pw.write("Invalid Command\\n" +
-                                     "Enter a user type!\\n" +
-                                     "Options:\\n  customer\\n  seller");
-                            pw.println();
-                            pw.flush();
-                            continue;
-                        }
-                        break;
-                    }
+                    userType = br.readLine();
 
                     User newIdentity;
                     if (userType.equals("customer")) {
@@ -121,15 +110,11 @@ public class LoginThread extends Thread {
                         return;
                     }
                 } else if (input.equals("exit")) {
-                    pw.write("Exiting...");
+                    pw.write("|exit|Exiting...");
                     pw.println();
                     pw.flush();
                     client.close();
                     return;
-                } else {
-                    pw.write("Invalid Command");
-                    pw.println();
-                    pw.flush();
                 }
             }
         } catch (IOException e) {
