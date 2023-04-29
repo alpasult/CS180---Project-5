@@ -54,7 +54,10 @@ public class Customer extends User {
         int i = purchases.indexOf(product);
         shoppingList.remove(i);
     }
-
+    /*
+    prints the users cart with the name of an item, what store it is from,
+    description of item, quantity, and price of item
+     */
     public String cart() {
         String out = "";
         out += "  |name           |store          |description                   | quantity|     price|\\n";
@@ -72,7 +75,10 @@ public class Customer extends User {
         }
         return out;
     }
-    
+    /*
+    shows what the user has purchased with the name of an item, what store it is from,
+    description of item, quantity, and price of item
+     */
     public String purchasesPrint() {
         String out = "";
         out += "  |name           |store          |description                   | quantity|     price|\\n";

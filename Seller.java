@@ -33,6 +33,9 @@ public class Seller extends User {
         products.remove(product);
     }
 
+    /*
+    function allows seller to import csv to add new products
+     */
     public boolean addCSV(String fileName) {
         ArrayList<String> newProducts = new ArrayList<String>();
         BufferedReader br;
