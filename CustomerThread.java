@@ -25,23 +25,23 @@ public class CustomerThread extends Thread {
             BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
             PrintWriter pw = new PrintWriter(client.getOutputStream()); 
 
-            pw.write("Welcome " + user.getLogin() + "\\n" +
-                     "COMMANDS:\\n" +
-                     "  browse: See what is currently available on the market\\n" +
-                     "  search: Search for a specific product on the market\\n" +
-                     "  cart: See what is currently in your cart\\n" +
-                     "  purchases: History of purchases\\n" +
-                     "  add: Add a new product to your shopping cart\\n" +
-                     "  remove: Remove an item from your cart\\n" +
-                     "  checkout: Check out and purchase everything in your cart\\n" +
-                     "  csv_export: Export a csv file containing your current products\\n" +
+            pw.write("|options|Welcome " + user.getLogin() + "\\n" +
+                     "COMMANDS:|text|" +
+                     "  browse: See what is currently available on the market," +
+                     "  search: Search for a specific product on the market," +
+                     "  cart: See what is currently in your cart," +
+                     "  purchases: History of purchases," +
+                     "  add: Add a new product to your shopping cart," +
+                     "  remove: Remove an item from your cart," +
+                     "  checkout: Check out and purchase everything in your cart," +
+                     "  csv_export: Export a csv file containing your current products," +
                      "  exit: Exit the application");
             pw.println();
             pw.flush();
             String input;
             while (true) {
                 input = br.readLine();
-                if (input.equals("browse")) {
+                if (input.contains("browse")) {
                     ArrayList<Product> listings = MarketServer.constructListings();
                     Product[] sortedListings = listings.toArray(new Product[listings.size()]);
 
@@ -58,7 +58,8 @@ public class CustomerThread extends Thread {
                         }
                     }
 
-                    String out = "";
+                    //TEST
+                    String out = "|message|";
                     out += "  |name           |store          |description                   | quantity|     price|\\n";
                     out += "==========================================" +
                         "=============================================\\n";

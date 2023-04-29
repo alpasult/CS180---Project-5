@@ -43,23 +43,41 @@ public class MarketClient {
                 input = br.readLine();
 
                 input = input.replace("\\n", "\n");
-                
+
                 if (input.contains("|options|")) {
                     input = input.substring(9);
                     String text = input.substring(0, input.indexOf("|text|"));
                     input = input.substring(input.indexOf("|text|") + 6);
                     String[] options = input.split(",");
-                    JOptionPane.showOptionDialog(null, text, "Marketplace", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                    output = (String) JOptionPane.showInputDialog(null, text, "Marketplace", JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+//                    int temp = JOptionPane.showOptionDialog(null, text, "Marketplace", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+//                    output = String.valueOf(temp);
+
                 } else if (input.contains("|input|")) {
+                    input = input.substring(7);
+                    output = JOptionPane.showInputDialog(null, input, "Marketplace", JOptionPane.QUESTION_MESSAGE);
+                    //JOptionPane.showInputDialog(null, input, "Marketplace", JOptionPane.QUESTION_MESSAGE);
                     
+                } else if (input.contains("|error|")) {
+                    input = input.substring(7);
+                    JOptionPane.showMessageDialog(null, input, "Marketplace", JOptionPane.ERROR_MESSAGE);
+
+                } else if (input.contains("|message|")) {
+                  input = input.substring(9);
+                  JOptionPane.showMessageDialog(null, input, "Marketplace", JOptionPane.INFORMATION_MESSAGE);
+
                 } else if (input.contains("|exit|")) {
-                    System.out.println("Thank you for using the Market Client!");
+                    input = input.substring(6);
+                    JOptionPane.showMessageDialog(null, input, "Marketplace", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Thank you for using the Market Client!", "Marketplace", JOptionPane.INFORMATION_MESSAGE);
+                    //System.out.println("Thank you for using the Market Client!");
                     in.close();
                     client.close();
                     return;
                 }
 
-                output = in.nextLine();
+                //output = in.nextLine();
                 pw.write(output);
                 pw.println();
                 pw.flush();
