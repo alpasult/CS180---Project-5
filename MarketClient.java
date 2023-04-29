@@ -48,7 +48,7 @@ public class MarketClient {
                     input = input.substring(input.indexOf("|text|") + 6);
                     String[] options = input.split(",");
                     int i = JOptionPane.showOptionDialog(null, text, "Marketplace", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                    System.out.println(options[i]);
+
                     pw.write(options[i]);
                     pw.println();
                     pw.flush();
