@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
  * 
@@ -55,6 +57,19 @@ public class MarketClient {
                 } else if (input.contains("|info|")) {
                     input = input.substring(6);
                     JOptionPane.showMessageDialog(null, input, "Marketplace", JOptionPane.INFORMATION_MESSAGE);
+                    pw.write("");
+                    pw.println();
+                    pw.flush();
+                } else if (input.contains("|table|")) {
+                    input = input.substring(7);
+                    String[] table = input.split("\n");
+                    String[][] rows = new String[table.length - 1][];
+                    for (int i = 1; i < table.length; i++) {
+                        rows[i - 1] = table[i].split(",");
+                    }
+                    String[] cols = table[0].split(",");
+                    JTable listings = new JTable(rows, cols);
+                    JOptionPane.showMessageDialog(null, new JScrollPane(listings), "Marketplace", JOptionPane.INFORMATION_MESSAGE);
                     pw.write("");
                     pw.println();
                     pw.flush();

@@ -125,14 +125,10 @@ public class Seller extends User {
                 sortedProducts[j] = bigger;
             }
         }
-        out += "  |name           |store          |description                   " + 
-            "| quantity|     price| amount sold|         profit|\\n";
-        out += "===================================================================" +
-            "=================================================\\n";
+        out += "|table|Name,Store,Description,Quantity,Price,Amount Sold,Profit\\n";
         for (int i = 0; i < sortedProducts.length; i++) {
             Product p = sortedProducts[i];
-            out += String.format("%-2d|%-15.15s|%-15.15s|%-30.30s|%9d|%10.2f|%12d|%15.2f|\\n", 
-                                 i, 
+            out += String.format("%.15s,%.15s,%.30s,%d,%.2f,%d,%.2f\\n", 
                                  p.getName(), 
                                  p.getStore(),
                                  p.getDescription(),
@@ -140,8 +136,6 @@ public class Seller extends User {
                                  p.getPrice(),
                                  p.getAmountSold(),
                                  p.getAmountSold() * p.getPrice());
-            out += "==================================================================================" +
-                "==================================\\n";
         }
         return out;
     }

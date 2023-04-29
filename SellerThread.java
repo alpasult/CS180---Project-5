@@ -56,13 +56,11 @@ public class SellerThread extends Thread {
                             input.equals("price") ||
                             input.equals("amount_sold")) {
                             String out = user.data(input);
-                            out = "|info|" + out;
                             pw.write(out);
                             pw.println();
                             pw.flush();
                         } else if (input.equals("customers")) {
                             String out = MarketServer.customerString(user.getLogin());
-                            out = "|info|" + out;
                             pw.write(out);
                             pw.println();
                             pw.flush();

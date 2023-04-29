@@ -58,20 +58,15 @@ public class CustomerThread extends Thread {
                     }
 
                     String out = "";
-                    out += "|info|  |name           |store          |description                   | quantity|     price|\\n";
-                    out += "==========================================" +
-                        "=============================================\\n";
+                    out += "|table|Name,Store,Description,Quantity,Price\\n";
                     for (int i = 0; i < sortedListings.length; i++) {
                         Product p = sortedListings[i];
-                        out += String.format("%-2d|%-15.15s|%-15.15s|%-30.30s|%9d|%10.2f|\\n", 
-                                            i, 
+                        out += String.format("%s,%s,%s,%d,%.2f\\n",
                                             p.getName(), 
                                             p.getStore(),
                                             p.getDescription(),
                                             p.getQuantity(),
                                             p.getPrice());
-                        out += "========================================" +
-                            "===============================================\\n";
                     }
 
                     pw.write(out);
@@ -108,20 +103,15 @@ public class CustomerThread extends Thread {
                     }
 
                     String out = "";
-                    out += "|info|  |name           |store          |description                   | quantity|     price|\\n";
-                    out += "==========================================" +
-                        "=============================================\\n";
+                    out += "|table|Name,Store,Description,Quantity,Price\\n";
                     for (int i = 0; i < sortedListings.length; i++) {
                         Product p = sortedListings[i];
-                        out += String.format("%-2d|%-15.15s|%-15.15s|%-30.30s|%9d|%10.2f|\\n", 
-                                            i, 
+                        out += String.format("%s,%s,%s,%d,%.2f\\n",
                                             p.getName(), 
                                             p.getStore(),
                                             p.getDescription(),
                                             p.getQuantity(),
                                             p.getPrice());
-                        out += "========================================" +
-                            "===============================================\\n";
                     }
 
                     pw.write(out);
@@ -129,13 +119,11 @@ public class CustomerThread extends Thread {
                     pw.flush();
                 } else if (input.equals("cart")) {
                     String out = user.cart();
-                    out = "|info|" + out;
                     pw.write(out);
                     pw.println();
                     pw.flush();
                 } else if (input.equals("purchases")) {
                     String out = user.purchasesPrint();
-                    out = "|info|" + out;
                     pw.write(out);
                     pw.println();
                     pw.flush();
