@@ -14,16 +14,19 @@ public class SellerThread extends Thread {
     private Socket client;
     private Seller user;
 
+    // Creates a seller's thread
     public SellerThread(Socket client, Seller user) {
         this.client = client;
         this.user = user;
     }
 
+    // Run method for all of seller's options
     public void run() {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
             PrintWriter pw = new PrintWriter(client.getOutputStream()); 
-            
+
+            // Displays all the options seller's have
             pw.write("Welcome " + user.getLogin() + "\\n" +
                      "COMMANDS:\\n" +
                      "  data: Data on your current products available for purchase\\n" +
@@ -38,7 +41,10 @@ public class SellerThread extends Thread {
             String input;
             while (true) {
                 input = br.readLine();
+
+                // Sellers want to sort their products
                 if (input.equals("data")) {
+                    // Displays all the ways sellers can sort their products
                     pw.write("COMMANDS:\\n" +
                              "  name: sort by name\\n" +
                              "  store: Sort by store\\n" +
@@ -51,7 +57,9 @@ public class SellerThread extends Thread {
                     pw.flush();
                     while (true) {
                         input = br.readLine();
-                        if (input.equals("name") || 
+
+                        // Making sure input is valid
+                        if (input.equals("name") ||
                             input.equals("store") || 
                             input.equals("quantity") ||
                             input.equals("price") ||
@@ -60,11 +68,15 @@ public class SellerThread extends Thread {
                             pw.write(out);
                             pw.println();
                             pw.flush();
+
+                        // Displays all the customers who have purchased items from their shop
                         } else if (input.equals("customers")) {
                             String out = MarketServer.customerString(user.getLogin());
                             pw.write(out);
                             pw.println();
                             pw.flush();
+
+                        // Brings sellers back to the previous page
                         } else if (input.equals("back")) {
                             pw.write("COMMANDS:\\n" +
                                      "  data: Data on your current products available for purchase\\n" +
@@ -77,13 +89,18 @@ public class SellerThread extends Thread {
                             pw.println();
                             pw.flush();
                             break;
+
+                        // Invalid command message
                         } else {
                             pw.write("Invalid Command");
                             pw.println();
                             pw.flush();
                         }
                     }
+
+                // Seller wants to add a new product
                 } else if (input.equals("add")) {
+                    // Gets all the product information
                     pw.write("Enter the product name:");
                     pw.println();
                     pw.flush();
@@ -103,6 +120,8 @@ public class SellerThread extends Thread {
                     pw.println();
                     pw.flush();
                     int quantity;
+
+                    // Checking to ensure the quantity is a valid number
                     while (true) {
                         try {
                             quantity = Integer.parseInt(br.readLine());
@@ -114,11 +133,14 @@ public class SellerThread extends Thread {
                             pw.flush();
                         }
                     }
-                    
+
+                    // Getting the cost for the product
                     pw.write("Enter the cost:");
                     pw.println();
                     pw.flush();
                     float price;
+
+                    // Checking to ensure the cost is a valid number
                     while (true) {
                         try {
                             price = Float.parseFloat(br.readLine());
@@ -131,12 +153,18 @@ public class SellerThread extends Thread {
                         }
                     }
 
+                    // Displays that a new product was successfully added
                     pw.write("New Product Added");
                     pw.println();
                     pw.flush();
+
+                    // Creates the new product
                     Product newProduct = new Product(name, store, user.getLogin(), description, quantity, price);
                     user.addProduct(newProduct);
+
+                // Seller wants to edit an existing product
                 } else if (input.equals("edit")) {
+                    // Getting the name of the product
                     pw.write("Enter the name of the product you wish to edit:");
                     pw.println();
                     pw.flush();
@@ -144,6 +172,8 @@ public class SellerThread extends Thread {
                     boolean done = false;
                     Product product = null;
                     String name;
+
+                    // Checking for the product
                     while (!done) {
                         name = br.readLine();
                         for (Product p : products) {
@@ -153,6 +183,7 @@ public class SellerThread extends Thread {
                                 break;
                             }
                         }
+                        // Product does not exist
                         if (!done) {
                             pw.write("Product not found" +
                                      "Enter the name of the product you wish to edit:");
@@ -161,6 +192,7 @@ public class SellerThread extends Thread {
                         }
                     }
 
+                    // Getting the new information
                     pw.write("Enter the new name:");
                     pw.println();
                     pw.flush();
@@ -180,6 +212,8 @@ public class SellerThread extends Thread {
                     pw.println();
                     pw.flush();
                     int quantity;
+
+                    // Checking that the quantity is valid
                     while (true) {
                         try {
                             quantity = Integer.parseInt(br.readLine());
@@ -196,6 +230,8 @@ public class SellerThread extends Thread {
                     pw.println();
                     pw.flush();
                     float price;
+
+                    // Checking that the price is valid
                     while (true) {
                         try {
                             price = Float.parseFloat(br.readLine());
@@ -208,58 +244,83 @@ public class SellerThread extends Thread {
                         }
                     }
 
-                    
+                    // Setting the new product values
                     product.setName(newName);
                     product.setPrice(price);
                     product.setStore(store);
                     product.setDescription(description);
                     product.setQuantity(quantity);
+
+                    // Showing that the product has been changed
                     pw.write("Product changed");
                     pw.println();
                     pw.flush();
+
+                // Seller wants to remove a product
                 } else if (input.equals("remove")) {
+                    // Getting the product name
                     pw.write("Enter the name of the product you wish to delete:\\n" +
                              "WARNING: DELETING THE PRODUCT WILL DELETE ALL RECORDS OF IT");
                     pw.println();
                     pw.flush();
                     String name = br.readLine();
                     Product[] products = user.getProducts();
+
+                    // Getting the product and deleting it
                     for (Product p : products) {
                         if (p.getName().equals(name)) {
                             user.removeProduct(p);
                             break;
                         }
                     }
+
+                    // Displaying that the item was deleted
                     pw.write("Item successfully deleted");
                     pw.println();
                     pw.flush();
+
+                // Imports a csv file containing a seller's new products
                 } else if (input.equals("csv_import")) {
+                    // Getting the file name
                     pw.write("Enter the file name:");
                     pw.println();
                     pw.flush();
                     input = br.readLine();
                     boolean success = user.addCSV(input);
+
+                    // Displaying that the file was imported successfully
                     if (success) {
                         pw.write("CSV Imported");
                         pw.println();
                         pw.flush();
+
+                    // File import failed
                     } else {
                         pw.write("CSV Import Failed");
                         pw.println();
                         pw.flush();
                     }
+
+                // Exports a csv file with a seller's current products
                 } else if (input.equals("csv_export")) {
+                    // Creating the filename
                     String fileName = "";
                     fileName += user.getLogin() + "_products.csv";
                     user.exportCSV(fileName);
+
+                    // Displaying that the file was exported successfully
                     pw.write("CSV Exported");
                     pw.println();
                     pw.flush();
+
+                // Seller wants to exit the marketplace
                 } else if (input.equals("exit")) {
                     pw.write("Thank you for visiting the Market!");
                     pw.println();
                     pw.flush();
                     break;
+
+                // An invalid command was used
                 } else {
                     pw.write("Invalid Command");
                     pw.println();
