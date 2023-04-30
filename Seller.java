@@ -95,12 +95,12 @@ public class Seller extends User {
                 Product bigger = sortedProducts[j];
 
                 if (format.equals("name")) {
-                    if (smaller.getName().compareTo(bigger.getName()) > 0) {
+                    if (smaller.getName().toUpperCase().compareTo(bigger.getName().toUpperCase()) > 0) {
                         bigger = sortedProducts[i];
                         smaller = sortedProducts[j];
                     }
                 } else if (format.equals("store")) {
-                    if (smaller.getStore().compareTo(bigger.getStore()) > 0) {
+                    if (smaller.getStore().toUpperCase().compareTo(bigger.getStore().toUpperCase()) > 0) {
                         bigger = sortedProducts[i];
                         smaller = sortedProducts[j];
                     }

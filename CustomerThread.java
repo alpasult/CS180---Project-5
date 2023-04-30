@@ -140,6 +140,9 @@ public class CustomerThread extends Thread {
                     while (true) {
                         try {
                             quantity = Integer.parseInt(br.readLine());
+                            if (quantity < 1) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
                             pw.write("|input|Invalid number\\n" +
@@ -182,6 +185,9 @@ public class CustomerThread extends Thread {
                     pw.println();
                     pw.flush();
                     String name = br.readLine();
+                    pw.write("|info|Item Removed from Cart: ");
+                    pw.println();
+                    pw.flush();
                     user.removeShoppingCart(name);
                 } else if (input.equals("checkout")) {
                     ArrayList<Product> cart = user.getShoppingList();

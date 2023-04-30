@@ -106,6 +106,9 @@ public class SellerThread extends Thread {
                     while (true) {
                         try {
                             quantity = Integer.parseInt(br.readLine());
+                            if (quantity < 1) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
                             pw.write("|input|Invalid number\\n" +
@@ -122,6 +125,9 @@ public class SellerThread extends Thread {
                     while (true) {
                         try {
                             price = Float.parseFloat(br.readLine());
+                            if (price < 0) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
                             pw.write("|input|Invalid number\\n" +
@@ -183,6 +189,9 @@ public class SellerThread extends Thread {
                     while (true) {
                         try {
                             quantity = Integer.parseInt(br.readLine());
+                            if (quantity < 1) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
                             pw.write("|input|Invalid number\\n" +
@@ -199,6 +208,9 @@ public class SellerThread extends Thread {
                     while (true) {
                         try {
                             price = Float.parseFloat(br.readLine());
+                            if (price < 0) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
                             pw.write("|input|Invalid number\\n" +
