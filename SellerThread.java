@@ -27,15 +27,14 @@ public class SellerThread extends Thread {
             PrintWriter pw = new PrintWriter(client.getOutputStream()); 
 
             // Displays all the options seller's have
-            pw.write("Welcome " + user.getLogin() + "\\n" +
-                     "COMMANDS:\\n" +
-                     "  data: Data on your current products available for purchase\\n" +
-                     "  add: Add a new product to one of your stores\\n" +
-                     "  edit: Edit one of your products\\n" +
-                     "  remove: Remove one of your products\\n" +
-                     "  csv_import: Import a csv file containing your new products\\n" +
-                     "  csv_export: Export a csv file containing your current products\\n" +
-                     "  exit: Exit the application");
+            pw.write("|options|Welcome " + user.getLogin() + "|text|" +
+                     "data," +
+                     "add," +
+                     "edit," +
+                     "remove," +
+                     "csv_import," +
+                     "csv_export," +
+                     "exit");
             pw.println();
             pw.flush();
             String input;
@@ -45,14 +44,14 @@ public class SellerThread extends Thread {
                 // Sellers want to sort their products
                 if (input.equals("data")) {
                     // Displays all the ways sellers can sort their products
-                    pw.write("COMMANDS:\\n" +
-                             "  name: sort by name\\n" +
-                             "  store: Sort by store\\n" +
-                             "  quantity: Sort by quantity\\n" +
-                             "  price: Sort by price\\n" +
-                             "  amount_sold: Sort by the amount sold\\n" +
-                             "  customers: View which users have bought which of your products\\n" +
-                             "  back: Go back to the main terminal");
+                    pw.write("|options|COMMANDS:|text|" +
+                             "name," +
+                             "store," +
+                             "quantity," +
+                             "price," +
+                             "amount_sold," +
+                             "customers," +
+                             "back");
                     pw.println();
                     pw.flush();
                     while (true) {
@@ -78,45 +77,44 @@ public class SellerThread extends Thread {
 
                         // Brings sellers back to the previous page
                         } else if (input.equals("back")) {
-                            pw.write("COMMANDS:\\n" +
-                                     "  data: Data on your current products available for purchase\\n" +
-                                     "  add: Add a new product to one of your stores\\n" +
-                                     "  edit: Edit one of your products\\n" +
-                                     "  remove: Remove one of your products\\n" +
-                                     "  csv_import: Import a csv file containing your new products\\n" +
-                                     "  csv_export: Export a csv file containing your current products\\n" +
-                                     "  exit: Exit the application");
+                            pw.write("|info|Going back to the main menu");
                             pw.println();
                             pw.flush();
                             break;
-
-                        // Invalid command message
-                        } else {
-                            pw.write("Invalid Command");
-                            pw.println();
-                            pw.flush();
                         }
+
+                        input = br.readLine();
+                        pw.write("|options|COMMANDS:|text|" +
+                             "name," +
+                             "store," +
+                             "quantity," +
+                             "price," +
+                             "amount_sold," +
+                             "customers," +
+                             "back");
+                        pw.println();
+                        pw.flush();
                     }
 
                 // Seller wants to add a new product
                 } else if (input.equals("add")) {
                     // Gets all the product information
-                    pw.write("Enter the product name:");
+                    pw.write("|input|Enter the product name:");
                     pw.println();
                     pw.flush();
                     String name = br.readLine();
                     
-                    pw.write("Enter the store name:");
+                    pw.write("|input|Enter the store name:");
                     pw.println();
                     pw.flush();
                     String store = br.readLine();
                     
-                    pw.write("Enter the product description:");
+                    pw.write("|input|Enter the product description:");
                     pw.println();
                     pw.flush();
                     String description = br.readLine();
                     
-                    pw.write("Enter the quantity:");
+                    pw.write("|input|Enter the quantity:");
                     pw.println();
                     pw.flush();
                     int quantity;
@@ -125,9 +123,12 @@ public class SellerThread extends Thread {
                     while (true) {
                         try {
                             quantity = Integer.parseInt(br.readLine());
+                            if (quantity < 1) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
-                            pw.write("Invalid number\\n" +
+                            pw.write("|input|Invalid number\\n" +
                                      "Enter the quantity:");
                             pw.println();
                             pw.flush();
@@ -135,7 +136,7 @@ public class SellerThread extends Thread {
                     }
 
                     // Getting the cost for the product
-                    pw.write("Enter the cost:");
+                    pw.write("|input|Enter the cost:");
                     pw.println();
                     pw.flush();
                     float price;
@@ -144,9 +145,12 @@ public class SellerThread extends Thread {
                     while (true) {
                         try {
                             price = Float.parseFloat(br.readLine());
+                            if (price < 0) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
-                            pw.write("Invalid number\\n" +
+                            pw.write("|input|Invalid number\\n" +
                                      "Enter the cost:");
                             pw.println();
                             pw.flush();
@@ -154,7 +158,7 @@ public class SellerThread extends Thread {
                     }
 
                     // Displays that a new product was successfully added
-                    pw.write("New Product Added");
+                    pw.write("|info|New Product Added");
                     pw.println();
                     pw.flush();
 
@@ -165,7 +169,7 @@ public class SellerThread extends Thread {
                 // Seller wants to edit an existing product
                 } else if (input.equals("edit")) {
                     // Getting the name of the product
-                    pw.write("Enter the name of the product you wish to edit:");
+                    pw.write("|input|Enter the name of the product you wish to edit:");
                     pw.println();
                     pw.flush();
                     Product[] products = user.getProducts();
@@ -185,7 +189,7 @@ public class SellerThread extends Thread {
                         }
                         // Product does not exist
                         if (!done) {
-                            pw.write("Product not found" +
+                            pw.write("|input|Product not found\\n" +
                                      "Enter the name of the product you wish to edit:");
                             pw.println();
                             pw.flush();
@@ -193,22 +197,22 @@ public class SellerThread extends Thread {
                     }
 
                     // Getting the new information
-                    pw.write("Enter the new name:");
+                    pw.write("|input|Enter the new name:");
                     pw.println();
                     pw.flush();
                     String newName = br.readLine();
 
-                    pw.write("Enter the new store:");
+                    pw.write("|input|Enter the new store:");
                     pw.println();
                     pw.flush();
                     String store = br.readLine();
 
-                    pw.write("Enter the new description:");
+                    pw.write("|input|Enter the new description:");
                     pw.println();
                     pw.flush();
                     String description = br.readLine();
 
-                    pw.write("Enter the new quantity:");
+                    pw.write("|input|Enter the new quantity:");
                     pw.println();
                     pw.flush();
                     int quantity;
@@ -217,16 +221,19 @@ public class SellerThread extends Thread {
                     while (true) {
                         try {
                             quantity = Integer.parseInt(br.readLine());
+                            if (quantity < 1) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
-                            pw.write("Invalid number\\n" +
+                            pw.write("|input|Invalid number\\n" +
                                      "Enter the new quantity:");
                             pw.println();
                             pw.flush();
                         }
                     }
 
-                    pw.write("Enter the new price:");
+                    pw.write("|input|Enter the new price:");
                     pw.println();
                     pw.flush();
                     float price;
@@ -235,9 +242,12 @@ public class SellerThread extends Thread {
                     while (true) {
                         try {
                             price = Float.parseFloat(br.readLine());
+                            if (price < 0) {
+                                throw new NumberFormatException();
+                            }
                             break;
                         } catch (NumberFormatException e) {
-                            pw.write("Invalid number\\n" +
+                            pw.write("|input|Invalid number\\n" +
                                      "Enter the new price:");
                             pw.println();
                             pw.flush();
@@ -252,14 +262,14 @@ public class SellerThread extends Thread {
                     product.setQuantity(quantity);
 
                     // Showing that the product has been changed
-                    pw.write("Product changed");
+                    pw.write("|info|Product changed");
                     pw.println();
                     pw.flush();
 
                 // Seller wants to remove a product
                 } else if (input.equals("remove")) {
                     // Getting the product name
-                    pw.write("Enter the name of the product you wish to delete:\\n" +
+                    pw.write("|input|Enter the name of the product you wish to delete:\\n" +
                              "WARNING: DELETING THE PRODUCT WILL DELETE ALL RECORDS OF IT");
                     pw.println();
                     pw.flush();
@@ -275,14 +285,14 @@ public class SellerThread extends Thread {
                     }
 
                     // Displaying that the item was deleted
-                    pw.write("Item successfully deleted");
+                    pw.write("|info|Item successfully deleted");
                     pw.println();
                     pw.flush();
 
                 // Imports a csv file containing a seller's new products
                 } else if (input.equals("csv_import")) {
                     // Getting the file name
-                    pw.write("Enter the file name:");
+                    pw.write("|input|Enter the file name:");
                     pw.println();
                     pw.flush();
                     input = br.readLine();
@@ -290,13 +300,13 @@ public class SellerThread extends Thread {
 
                     // Displaying that the file was imported successfully
                     if (success) {
-                        pw.write("CSV Imported");
+                        pw.write("|info|CSV Imported");
                         pw.println();
                         pw.flush();
 
                     // File import failed
                     } else {
-                        pw.write("CSV Import Failed");
+                        pw.write("|info|CSV Import Failed");
                         pw.println();
                         pw.flush();
                     }
@@ -307,33 +317,37 @@ public class SellerThread extends Thread {
                     String fileName = "";
                     fileName += user.getLogin() + "_products.csv";
                     user.exportCSV(fileName);
-
+                    
                     // Displaying that the file was exported successfully
-                    pw.write("CSV Exported");
+                    pw.write("|info|CSV Exported");
                     pw.println();
                     pw.flush();
 
                 // Seller wants to exit the marketplace
                 } else if (input.equals("exit")) {
-                    pw.write("Thank you for visiting the Market!");
+                    pw.write("|info|Thank you for visiting the Market!");
                     pw.println();
                     pw.flush();
                     break;
-
-                // An invalid command was used
-                } else {
-                    pw.write("Invalid Command");
-                    pw.println();
-                    pw.flush();
-                }
-                if (input == null) {
-                    throw new IOException();
-                }
+                } 
+                
+                // Prompt the user for a command
+                input = br.readLine();
+                pw.write("|options|Welcome " + user.getLogin() + "|text|" +
+                     "data," +
+                     "add," +
+                     "edit," +
+                     "remove," +
+                     "csv_import," +
+                     "csv_export," +
+                     "exit");
+                pw.println();
+                pw.flush();
             }
             br.close();
             pw.close();
         } catch (IOException e) {
-            System.out.println("Connection Error");
+            System.out.println("|error|Connection Error");
             return;
         }
     }

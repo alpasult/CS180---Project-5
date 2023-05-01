@@ -93,8 +93,7 @@ public class MarketServer {
     the product they bought and how much they bought running through multiple for loops
     */
     public static String customerString(String login) {
-        String out = " |Customer       |Product        | Amount Bought|\\n";
-        out += "=================================================\\n";
+        String out = "|table|Customer,Product,Amount Bought\\n";
         Product[] products = {};
         ArrayList<String> productNames = new ArrayList<String>();
 
@@ -117,17 +116,16 @@ public class MarketServer {
                         if (productNames.contains(p.getName())) {
                             if (!written) {
                                 written = true;
-                                out += String.format(" |%-15.15s|%-15.15s|%-14d|\\n",
+                                out += String.format("%s,%s,%d\\n",
                                                      u.getLogin(),
                                                      p.getName(),
                                                      p.getQuantity());
                             } else {
-                                out += String.format(" |%-15.15s|%-15.15s|%-14d|\\n",
+                                out += String.format("%s,%s,%d\\n",
                                                      "",
                                                      p.getName(),
                                                      p.getQuantity());
                             }
-                            out += "=================================================\\n";
                         }
                     }
                 }

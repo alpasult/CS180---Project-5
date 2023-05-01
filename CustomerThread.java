@@ -28,17 +28,17 @@ public class CustomerThread extends Thread {
             PrintWriter pw = new PrintWriter(client.getOutputStream()); 
 
             // Displays all the customer choices
-            pw.write("Welcome " + user.getLogin() + "\\n" +
-                     "COMMANDS:\\n" +
-                     "  browse: See what is currently available on the market\\n" +
-                     "  search: Search for a specific product on the market\\n" +
-                     "  cart: See what is currently in your cart\\n" +
-                     "  purchases: History of purchases\\n" +
-                     "  add: Add a new product to your shopping cart\\n" +
-                     "  remove: Remove an item from your cart\\n" +
-                     "  checkout: Check out and purchase everything in your cart\\n" +
-                     "  csv_export: Export a csv file containing your current products\\n" +
-                     "  exit: Exit the application");
+            pw.write("|options|Welcome " + user.getLogin() + "|text|" +
+                     "browse," +
+                     "search," +
+                     "cart," +
+                     "purchases," +
+                     "add," +
+                     "remove," +
+                     "checkout," +
+                     "csv_export," +
+                     "exit");
+
             pw.println();
             pw.flush();
             String input;
@@ -66,20 +66,15 @@ public class CustomerThread extends Thread {
 
                     // Creating the output that displays all the products
                     String out = "";
-                    out += "  |name           |store          |description                   | quantity|     price|\\n";
-                    out += "==========================================" +
-                        "=============================================\\n";
+                    out += "|table|Name,Store,Description,Quantity,Price\\n";
                     for (int i = 0; i < sortedListings.length; i++) {
                         Product p = sortedListings[i];
-                        out += String.format("%-2d|%-15.15s|%-15.15s|%-30.30s|%9d|%10.2f|\\n", 
-                                            i, 
+                        out += String.format("%s,%s,%s,%d,%.2f\\n",
                                             p.getName(), 
                                             p.getStore(),
                                             p.getDescription(),
                                             p.getQuantity(),
                                             p.getPrice());
-                        out += "========================================" +
-                            "===============================================\\n";
                     }
 
                     // Writing the output string to be displayed in the client
@@ -90,7 +85,7 @@ public class CustomerThread extends Thread {
                 // Customer wants to search for a specific product
                 } else if (input.equals("search")) {
                     // Getting the user's search
-                    pw.write("Enter your search term: ");
+                    pw.write("|input|Enter your search term: ");
                     pw.println();
                     pw.flush();
                     String search = br.readLine();
@@ -123,20 +118,15 @@ public class CustomerThread extends Thread {
 
                     // Creating the output that displays all the matching products
                     String out = "";
-                    out += "  |name           |store          |description                   | quantity|     price|\\n";
-                    out += "==========================================" +
-                        "=============================================\\n";
+                    out += "|table|Name,Store,Description,Quantity,Price\\n";
                     for (int i = 0; i < sortedListings.length; i++) {
                         Product p = sortedListings[i];
-                        out += String.format("%-2d|%-15.15s|%-15.15s|%-30.30s|%9d|%10.2f|\\n", 
-                                            i, 
+                        out += String.format("%s,%s,%s,%d,%.2f\\n",
                                             p.getName(), 
                                             p.getStore(),
                                             p.getDescription(),
                                             p.getQuantity(),
                                             p.getPrice());
-                        out += "========================================" +
-                            "===============================================\\n";
                     }
 
                     // Writing the output to be displayed in the client
@@ -161,25 +151,28 @@ public class CustomerThread extends Thread {
                 // Customer wants to add a new product to their cart
                 } else if (input.equals("add")) {
                     // Asking for the product name
-                    pw.write("Enter the name of the product: ");
+                    pw.write("|input|Enter the name of the product: ");
                     pw.println();
                     pw.flush();
                     ArrayList<Product> listings = MarketServer.constructListings();
                     String name = br.readLine();
 
                     // Getting the amount of product they want to buy
-                    pw.write("Enter the amount you want to buy: ");
+                    pw.write("|input|Enter the amount you want to buy: ");
                     pw.println();
                     pw.flush();
                     int quantity;
                     while (true) {
                         try {
                             quantity = Integer.parseInt(br.readLine());
+                            if (quantity < 1) {
+                                throw new NumberFormatException();
+                            }
                             break;
 
                         // If the quantity entered is invalid
                         } catch (NumberFormatException e) {
-                            pw.write("Invalid number\\n" +
+                            pw.write("|input|Invalid number\\n" +
                                      "Enter the quantity:");
                             pw.println();
                             pw.flush();
@@ -205,36 +198,39 @@ public class CustomerThread extends Thread {
 
                     // Displays that the item is unavailable
                     if (quantity == 0) {
-                        pw.write("Item not Available");
+                        pw.write("|info|Item not Available");
                         pw.println();
                         pw.flush();
 
                     // Displays that the item was added to the shopping cart
                     } else if (found) {
-                        pw.write("Item Added to Shopping Cart!");
+                        pw.write("|info|Item Added to Shopping Cart!");
                         pw.println();
                         pw.flush();
 
                     // Displays that the item was not found
                     } else {
-                        pw.write("No such item found");
+                        pw.write("|info|No such item found");
                         pw.println();
                         pw.flush();
                     }
 
                 // Removes the product from the customer's cart
                 } else if (input.equals("remove")) {
-                    pw.write("Enter the name of the product: ");
+                    pw.write("|input|Enter the name of the product: ");
                     pw.println();
                     pw.flush();
                     String name = br.readLine();
+                    pw.write("|info|Item Removed from Cart: ");
+                    pw.println();
+                    pw.flush();
                     user.removeShoppingCart(name);
 
                 // Customer wants to check out
                 } else if (input.equals("checkout")) {
                     ArrayList<Product> cart = user.getShoppingList();
                     ArrayList<Product> listings = MarketServer.constructListings();
-                    String out = "";
+                    String out = "|info|";
                     for (Product p : cart) {
                         for (Product r : listings) {
                             if (p.getName().equals(r.getName()) && 
@@ -272,31 +268,36 @@ public class CustomerThread extends Thread {
                     String fileName = "";
                     fileName += user.getLogin() + "_purchases.csv";
                     user.exportCSV(fileName);
-                    pw.write("CSV Exported");
+                    pw.write("|info|CSV Exported");
                     pw.println();
                     pw.flush();
 
                 // Customer wants to exit the market
                 } else if (input.equals("exit")) {
-                    pw.write("Thank you for visiting the Market!");
+                    pw.write("|exit|Thank you for visiting the Market!");
                     pw.println();
                     pw.flush();
                     break;
+                }
+                input = br.readLine();
 
-                // Customer picked an invalid command
-                } else {
-                    pw.write("Invalid Command");
-                    pw.println();
-                    pw.flush();
-                }
-                if (input == null) {
-                    throw new IOException();
-                }
+                pw.write("|options|Welcome " + user.getLogin() + "|text|" +
+                         "browse," +
+                         "search," +
+                         "cart," +
+                         "purchases," +
+                         "add," +
+                         "remove," +
+                         "checkout," +
+                         "csv_export," +
+                         "exit");
+                pw.println();
+                pw.flush();
             }
             br.close();
             pw.close();
         } catch (IOException e) {
-            System.out.println("Connection Error");
+            System.out.println("|error|Connection Error");
             return;
         }
     }

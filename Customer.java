@@ -60,18 +60,15 @@ public class Customer extends User {
      */
     public String cart() {
         String out = "";
-        out += "  |name           |store          |description                   | quantity|     price|\\n";
-        out += "=======================================================================================\\n";
+        out += "|table|Name,Store,Description,Quantity,Price\\n";
         for (int i = 0; i < shoppingList.size(); i++) {
             Product p = shoppingList.get(i);
-            out += String.format("%-2d|%-15.15s|%-15.15s|%-30.30s|%9d|%10.2f|\\n", 
-                                 i, 
+            out += String.format("%s,%s,%s,%d,%.2f\\n",
                                  p.getName(), 
                                  p.getStore(),
                                  p.getDescription(),
                                  p.getQuantity(),
                                  p.getPrice());
-            out += "=======================================================================================\\n";
         }
         return out;
     }
@@ -81,18 +78,15 @@ public class Customer extends User {
      */
     public String purchasesPrint() {
         String out = "";
-        out += "  |name           |store          |description                   | quantity|     price|\\n";
-        out += "=======================================================================================\\n";
+        out += "|table|Name,Store,Description,Quantity,Price\\n";
         for (int i = 0; i < purchases.size(); i++) {
             Product p = purchases.get(i);
-            out += String.format("%-2d|%-15.15s|%-15.15s|%-30.30s|%9d|%10.2f|\\n", 
-                                 i, 
+            out += String.format("%s,%s,%s,%d,%.2f\\n",
                                  p.getName(), 
                                  p.getStore(),
                                  p.getDescription(),
                                  p.getQuantity(),
                                  p.getPrice());
-            out += "=======================================================================================\\n";
         }
         return out;
     }

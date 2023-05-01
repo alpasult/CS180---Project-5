@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
  * 
@@ -65,7 +67,7 @@ public class MarketClient {
 
                     // Displays a GUI to the user and saves their answer choice
                     int i = JOptionPane.showOptionDialog(null, text, "Marketplace", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                    System.out.println(options[i]);
+
                     pw.write(options[i]);
                     pw.println();
                     pw.flush();
@@ -80,7 +82,20 @@ public class MarketClient {
                     pw.write("");
                     pw.println();
                     pw.flush();
-
+                // Displays a GUI table when a table needs to be displayed
+                } else if (input.contains("|table|")) {
+                    input = input.substring(7);
+                    String[] table = input.split("\n");
+                    String[][] rows = new String[table.length - 1][];
+                    for (int i = 1; i < table.length; i++) {
+                        rows[i - 1] = table[i].split(",");
+                    }
+                    String[] cols = table[0].split(",");
+                    JTable listings = new JTable(rows, cols);
+                    JOptionPane.showMessageDialog(null, new JScrollPane(listings), "Marketplace", JOptionPane.INFORMATION_MESSAGE);
+                    pw.write("");
+                    pw.println();
+                    pw.flush();
                 // Displays a GUI when user input is required
                 } else if (input.contains("|input|")) {
                     // Gets what information the user needs to input
