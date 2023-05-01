@@ -13,15 +13,18 @@ import java.net.Socket;
 public class LoginThread extends Thread {
     Socket client;
 
+    // Creates the user's login thread
     public LoginThread(Socket client) {
         this.client = client;
     }
 
+    // Run method to create or login user's
     public void run() {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(client.getInputStream()));
             PrintWriter pw = new PrintWriter(client.getOutputStream()); 
 
+            // Asking users what they want to do
             pw.write("|options|Welcome to the Market!|text|" +
                      "login," +
                      "register," +
@@ -30,6 +33,8 @@ public class LoginThread extends Thread {
             pw.flush();
             while (true) {
                 String input = br.readLine();
+
+                // Existing user wants to log in
                 if (input.equals("login")) {
                     pw.write("|input|Enter your username:");
                     pw.println();
@@ -40,6 +45,7 @@ public class LoginThread extends Thread {
                     pw.flush();
                     String password = br.readLine();
 
+                    // Checks to see if the user exist
                     User user = MarketServer.find(login, password);
                     if (user != null) {
                         if (user instanceof Customer) {
@@ -51,6 +57,8 @@ public class LoginThread extends Thread {
                             newThread.start();
                             return;
                         }
+
+                    // Displays error message for invalid login
                     } else {
                         pw.write("|error|Invalid login");
                         pw.println();
@@ -58,6 +66,8 @@ public class LoginThread extends Thread {
                         client.close();
                         return;
                     }
+
+                // New user wants to register
                 } else if (input.equals("register")) {
                     String login;
                     String password;
@@ -69,6 +79,8 @@ public class LoginThread extends Thread {
                     while (true) {
                         login = br.readLine();
                         boolean found = false;
+
+                        // Checks to make sure username does not match an existing one
                         for (User u : MarketServer.userList) {
                             if (u.getLogin().equals(login)) {
                                 found = true;
@@ -83,11 +95,13 @@ public class LoginThread extends Thread {
                         }
                     }
 
+                    // Asks for user to create a password
                     pw.write("|input|Enter a new password:");
                     pw.println();
                     pw.flush();
                     password = br.readLine();
 
+                    // Asks user if they are a customer or seller
                     pw.write("|options|Enter a user type:|text|" +
                              "customer," +
                              "seller");
@@ -95,6 +109,7 @@ public class LoginThread extends Thread {
                     pw.flush();
                     userType = br.readLine();
 
+                    // Creates a new user based on if they are a customer or seller
                     User newIdentity;
                     if (userType.equals("customer")) {
                         newIdentity = new Customer(login, password);
@@ -109,6 +124,8 @@ public class LoginThread extends Thread {
                         newThread.start();
                         return;
                     }
+
+                // User wants to exit the market
                 } else if (input.equals("exit")) {
                     pw.write("|exit|Exiting...");
                     pw.println();

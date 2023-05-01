@@ -35,6 +35,9 @@ public class MarketServer {
         }
     }
 
+   /*
+    finds user with same login and password
+    */
     public static User find(String login, String password) {
         for (int i = 0; i < userList.size(); i++) {
             User user = userList.get(i);
@@ -62,6 +65,10 @@ public class MarketServer {
         return out;
     }
 
+    /*
+    if user is a seller if a product matches the product to be removed it is taken off
+    the productArray
+    */
     public static void remove(Product product) {
         boolean done = false;
         for (User user : userList) {
@@ -81,7 +88,10 @@ public class MarketServer {
             }
         }
     }
-
+    /*
+    prints out a formated list for all users that are customers showing the customer,
+    the product they bought and how much they bought running through multiple for loops
+    */
     public static String customerString(String login) {
         String out = "|table|Customer,Product,Amount Bought\\n";
         Product[] products = {};
